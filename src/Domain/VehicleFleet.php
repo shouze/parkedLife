@@ -27,14 +27,43 @@ class VehicleFleet
         return $vehicle;
     }
 
+    public function parkVehicle(string $platenumber, Location $where, \DateTimeInterface $when)
+    {
+        $vehicle = $this->vehicleWithPlatenumber($platenumber);
+
+        if (null === $vehicle) {
+            throw new \LogicException(sprintf('Cannot park unknown vehicle %s', $platenumber));
+        }
+
+        $vehicle->park($where, $when);
+    }
+
     public function isVehiclePartOf(string $platenumber)
+    {
+        return null !== $this->vehicleWithPlatenumber($platenumber);
+    }
+
+    public function isVehicleLocated(string $platenumber, Location $location)
+    {
+        $vehicle = $this->vehicleWithPlatenumber($platenumber);
+
+        if (null === $vehicle) {
+            throw new \LogicException(sprintf('Cannot locate unknown vehicle %s', $platenumber));
+        }
+
+        return $vehicle->isLocatedAt($location);
+    }
+
+    private function vehicleWithPlatenumber(string $platenumber)
     {
         return array_reduce(
             $this->vehicles,
             function ($carry, Vehicle $e) use ($platenumber) {
-                return $e->hasPlatenumber($platenumber);
+                if ($e->hasPlatenumber($platenumber)) {
+                    return $e;
+                }
             },
-            false
+            null
         );
     }
 }
