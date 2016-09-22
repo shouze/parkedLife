@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Shouze\ParkedLife\Domain;
 
@@ -18,9 +19,9 @@ class VehicleFleet
         return new VehicleFleet($userId);
     }
 
-    public function registerVehicle(string $platenumber)
+    public function registerVehicle(string $platenumber, string $description)
     {
-        $vehicle = Vehicle::register($platenumber);
+        $vehicle = Vehicle::register($platenumber, $this->userId, $description);
 
         $this->vehicles[] = $vehicle;
 

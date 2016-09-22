@@ -43,15 +43,15 @@ class FeatureContext implements Context
     public function iRegistredMyVehicleWithPlatenumber($platenumber)
     {
         // should be an event newt
-        $this->vehicleFleet->registerVehicle($platenumber);
+        $this->vehicleFleet->registerVehicle($platenumber, 'Some vehicle description');
     }
 
     /**
-     * @When I register my vehicle with platenumber :platenumber in my vehicle fleet
+     * @When I register my vehicle with platenumber :platenumber described as :description in my vehicle fleet
      */
-    public function iRegisterMyVehicleInMyVehicleFleet($platenumber)
+    public function iRegisterMyVehicleInMyVehicleFleet($platenumber, $description)
     {
-        $this->vehicleFleet->registerVehicle($platenumber);
+        $this->vehicleFleet->registerVehicle($platenumber, $description);
     }
 
     /**
