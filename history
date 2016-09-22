@@ -1,0 +1,10 @@
+composer init --name=shouze/parked-life --type=application --license=MIT -n
+# Add autoload part in composer.json
+composer require --dev behat/behat
+vendor/bin/behat --init
+# Create and fill register_vehicle.feature
+vendor/bin/behat --append-snippets --snippets-for=FeatureContext
+# Modify context to add the classname
+composer require --dev phpspec/phpspec
+# Create phpspec.yml with psr4_prefix
+vendor/bin/phpspec run
