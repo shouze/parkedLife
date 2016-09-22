@@ -1,0 +1,4 @@
+suites:
+    parked_life:
+        namespace: Shouze\ParkedLife
+        psr4_prefix: Shouze\ParkedLife

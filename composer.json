@@ -1,0 +1,13 @@
+{
+    "name": "shouze/parked-life",
+    "type": "application",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": { "Shouze\\ParkedLife\\": "src/" }
+    },
+    "require": {},
+    "require-dev": {
+        "behat/behat": "^3.2",
+        "phpspec/phpspec": "^3.1"
+    }
+}
