@@ -5,5 +5,5 @@ Feature: Register vehicle
     I should be able to register my vehicle
 
     Scenario: Successfully registring of a vehicle
-        When I register my vehicle with platenumber "123 DE 456" in my vehicle fleet
+        When I register my vehicle with platenumber "123 DE 456" described as "My sport car" in my vehicle fleet
         Then the vehicle with platenumber "123 DE 456" should be part of my vehicle fleet

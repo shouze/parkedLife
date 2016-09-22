@@ -10,19 +10,19 @@ use Prophecy\Argument;
 
 class VehicleFleetSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith(new UserId('123'));
     }
 
-    function it_register_new_vehicle()
+    public function it_register_new_vehicle()
     {
-        $this->registerVehicle('123 DE 45')->shouldReturnAnInstanceOf(Vehicle::class);
+        $this->registerVehicle('123 DE 45', 'My sport car')->shouldReturnAnInstanceOf(Vehicle::class);
     }
 
-    function it_ensure_registred_vehicle_is_part_of_fleet()
+    public function it_ensure_registred_vehicle_is_part_of_fleet()
     {
-        $this->registerVehicle('123 DE 45');
+        $this->registerVehicle('123 DE 45', 'My sport car');
         $this->shouldBeVehiclePartOf('123 DE 45');
     }
 }
