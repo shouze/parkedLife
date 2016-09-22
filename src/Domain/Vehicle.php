@@ -22,14 +22,9 @@ class Vehicle
         $this->description = $description;
     }
 
-    public static function register(string $platenumber, UserId $userId, string $description)
+    public static function register(string $platenumber, UserId $userId, string $description): Vehicle
     {
         return new static($platenumber, $userId, $description);
-    }
-
-    public function hasPlatenumber(string $platenumber)
-    {
-        return $platenumber === $this->platenumber;
     }
 
     public function park(Location $where, \DateTimeInterface $when)
@@ -38,7 +33,12 @@ class Vehicle
         $this->parkedAt = $when;
     }
 
-    public function isLocatedAt(Location $location)
+    public function hasPlatenumber(string $platenumber): bool
+    {
+        return $platenumber === $this->platenumber;
+    }
+
+    public function isLocatedAt(Location $location): bool
     {
         return $this->currentLocation->isEqualTo($location);
     }

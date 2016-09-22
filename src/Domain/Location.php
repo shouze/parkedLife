@@ -9,20 +9,20 @@ class Location
 
     private $longitude;
 
-    public function __construct($latitude, $longitude)
+    public function __construct(float $latitude, float $longitude)
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
     }
 
-    public static function fromString(string $locationAsString)
+    public static function fromString(string $locationAsString): Location
     {
-        list($latitude, $longitude) = explode(',', $locationAsString);
+        list($latitude, $longitude) = sscanf($locationAsString, '%f,%f');
 
         return new Location($latitude, $longitude);
     }
 
-    public function isEqualTo(Location $location)
+    public function isEqualTo(Location $location): bool
     {
         return
             $this->getLatitude() === $location->getLatitude() &&
@@ -30,12 +30,12 @@ class Location
         ;
     }
 
-    public function getLatitude()
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
 
-    public function getLongitude()
+    public function getLongitude(): float
     {
         return $this->longitude;
     }

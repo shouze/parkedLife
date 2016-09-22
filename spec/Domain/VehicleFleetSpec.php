@@ -50,4 +50,9 @@ class VehicleFleetSpec extends ObjectBehavior
         $this->parkVehicle('123 DE 45', Location::fromString('3.14,5.67'), new \DateTime);
         $this->isVehicleLocated('123 DE 45', Location::fromString('3.14,4.67'))->shouldBe(false);
     }
+
+    public function it_should_not_be_able_to_locate_a_vehicle_not_part_of_a_fleet()
+    {
+        $this->shouldThrow(\LogicException::class)->duringIsVehicleLocated('123 DE 45', Location::fromString('3.14,4.67'));
+    }
 }

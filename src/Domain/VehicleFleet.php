@@ -14,7 +14,7 @@ class VehicleFleet
         $this->userId = $userId;
     }
 
-    public static function ofUser(UserId $userId)
+    public static function ofUser(UserId $userId): VehicleFleet
     {
         return new VehicleFleet($userId);
     }
@@ -30,41 +30,50 @@ class VehicleFleet
 
     public function parkVehicle(string $platenumber, Location $where, \DateTimeInterface $when)
     {
-        $vehicle = $this->vehicleWithPlatenumber($platenumber);
-
-        if (null === $vehicle) {
-            throw new \LogicException(sprintf('Cannot park unknown vehicle %s', $platenumber));
+        try {
+            $vehicle = $this->vehicleWithPlatenumber($platenumber);
+        } catch (\LogicException $e) {
+            throw new \LogicException(sprintf('Cannot park unknown vehicle %s', $platenumber, 0, $e));
         }
 
         $vehicle->park($where, $when);
     }
 
-    public function isVehiclePartOf(string $platenumber)
+    public function isVehiclePartOf(string $platenumber): bool
     {
-        return null !== $this->vehicleWithPlatenumber($platenumber);
+        try {
+            $this->vehicleWithPlatenumber($platenumber);
+            return true;
+        } catch (\LogicException $e) {
+            return false;
+        }
+
+        return false;
     }
 
-    public function isVehicleLocated(string $platenumber, Location $location)
+    public function isVehicleLocated(string $platenumber, Location $location): bool
     {
         $vehicle = $this->vehicleWithPlatenumber($platenumber);
-
-        if (null === $vehicle) {
-            throw new \LogicException(sprintf('Cannot locate unknown vehicle %s', $platenumber));
-        }
 
         return $vehicle->isLocatedAt($location);
     }
 
-    private function vehicleWithPlatenumber(string $platenumber)
+    private function vehicleWithPlatenumber(string $platenumber): Vehicle
     {
-        return array_reduce(
+        $vehicle =  array_reduce(
             $this->vehicles,
-            function ($carry, Vehicle $e) use ($platenumber) {
-                if ($e->hasPlatenumber($platenumber)) {
-                    return $e;
+            function ($carry, Vehicle $v) use ($platenumber) {
+                if ($v->hasPlatenumber($platenumber)) {
+                    return $v;
                 }
             },
             null
         );
+
+        if (null === $vehicle) {
+            throw new \LogicException(sprintf('Vehicle with plate number %s is unknown in fleet #%s', $platenumber, $this->userId));
+        }
+
+        return $vehicle;
     }
 }
