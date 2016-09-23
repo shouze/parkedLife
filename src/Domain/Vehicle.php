@@ -15,16 +15,20 @@ class Vehicle
 
     private $parkedAt;
 
-    public function __construct(string $platenumber, UserId $userId, string $description)
+    public function __construct(string $platenumber, UserId $userId)
     {
         $this->platenumber = $platenumber;
         $this->userId = $userId;
-        $this->description = $description;
     }
 
-    public static function register(string $platenumber, UserId $userId, string $description): Vehicle
+    public static function register(string $platenumber, UserId $userId): Vehicle
     {
-        return new static($platenumber, $userId, $description);
+        return new static($platenumber, $userId);
+    }
+
+    public function describe(string $description)
+    {
+        $this->description = $description;
     }
 
     public function park(Location $where, \DateTimeInterface $when)

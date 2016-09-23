@@ -55,4 +55,15 @@ class VehicleFleetSpec extends ObjectBehavior
     {
         $this->shouldThrow(\LogicException::class)->duringIsVehicleLocated('123 DE 45', Location::fromString('3.14,4.67'));
     }
+
+    public function it_should_describe_known_vehicle()
+    {
+        $this->registerVehicle('123 DE 45', 'My sport car');
+        $this->describeVehicle('123 DE 45', 'My über sport car');
+    }
+
+    public function it_should_not_describe_unknown_vehicle()
+    {
+        $this->shouldThrow(\LogicException::class)->duringDescribeVehicle('123 DE 45', 'My über sport car');
+    }
 }

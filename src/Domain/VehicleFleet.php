@@ -21,11 +21,19 @@ class VehicleFleet
 
     public function registerVehicle(string $platenumber, string $description)
     {
-        $vehicle = Vehicle::register($platenumber, $this->userId, $description);
+        $vehicle = Vehicle::register($platenumber, $this->userId);
+        $vehicle->describe($description);
 
         $this->vehicles[] = $vehicle;
 
         return $vehicle;
+    }
+
+    public function describeVehicle(string $platenumber, string $description)
+    {
+        $vehicle = $this->vehicleWithPlatenumber($platenumber);
+
+        $vehicle->describe($description);
     }
 
     public function parkVehicle(string $platenumber, Location $where, \DateTimeInterface $when)
