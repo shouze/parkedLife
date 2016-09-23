@@ -39,24 +39,15 @@ class VehicleFleet
         $this->vehicles[] = Vehicle::register($change->getPlatenumber(), new UserId($change->getUserId()));
     }
 
+    public function describeVehicle(string $platenumber, string $description)
+    {
+        $this->whenVehicleWasDescribed(new VehicleWasDescribed($platenumber, $description));
+    }
+
     public function whenVehicleWasDescribed($change)
     {
         $vehicle = $this->vehicleWithPlatenumber($change->getPlatenumber());
         $vehicle->describe($change->getDescription());
-
-        foreach ($this->vehicles as $position => $v) {
-            if ($vehicle->isEqualTo($v)) {
-                $vehicles[$position] = $vehicle;
-                break;
-            }
-        }
-    }
-
-    public function describeVehicle(string $platenumber, string $description)
-    {
-        $vehicle = $this->vehicleWithPlatenumber($platenumber);
-
-        $vehicle->describe($description);
     }
 
     public function parkVehicle(string $platenumber, Location $where, \DateTimeInterface $when)
