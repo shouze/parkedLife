@@ -67,7 +67,7 @@ class FeatureContext implements Context
      */
     public function theVehicleShouldBePartOfMyVehicleFleet($platenumber)
     {
-        $this->vehicleFleet->isVehiclePartOf($platenumber);
+        Assertion::true($this->vehicleFleet->isVehiclePartOf($platenumber));
     }
 
     /**
