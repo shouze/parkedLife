@@ -21,12 +21,35 @@ class VehicleFleet
 
     public function registerVehicle(string $platenumber, string $description)
     {
-        $vehicle = Vehicle::register($platenumber, $this->userId);
-        $vehicle->describe($description);
+        $changes = [
+            new VehicleWasRegistered($platenumber, (string)$this->userId),
+            new VehicleWasDescribed($platenumber, $description)
+        ];
 
-        $this->vehicles[] = $vehicle;
+        foreach ($changes as $change) {
+            $handler = sprintf('when%s', implode('', array_slice(explode('\\', get_class($change)), -1)));
+            $this->{$handler}($change);
+        }
 
-        return $vehicle;
+        return $this->vehicleWithPlatenumber($platenumber);
+    }
+
+    public function whenVehicleWasRegistered($change)
+    {
+        $this->vehicles[] = Vehicle::register($change->getPlatenumber(), new UserId($change->getUserId()));
+    }
+
+    public function whenVehicleWasDescribed($change)
+    {
+        $vehicle = $this->vehicleWithPlatenumber($change->getPlatenumber());
+        $vehicle->describe($change->getDescription());
+
+        foreach ($this->vehicles as $position => $v) {
+            if ($vehicle->isEqualTo($v)) {
+                $vehicles[$position] = $vehicle;
+                break;
+            }
+        }
     }
 
     public function describeVehicle(string $platenumber, string $description)

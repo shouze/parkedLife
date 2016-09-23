@@ -46,4 +46,9 @@ class Vehicle
     {
         return $this->currentLocation->isEqualTo($location);
     }
+
+    public function isEqualTo(Vehicle $vehicle)
+    {
+        return $vehicle->platenumber === $this->platenumber;
+    }
 }
