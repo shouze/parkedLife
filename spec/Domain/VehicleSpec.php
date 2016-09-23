@@ -15,14 +15,25 @@ class VehicleSpec extends ObjectBehavior
         $this->beConstructedThrough('register', ['123 DE 456', new UserId('user'), 'Some car description']);
     }
 
-    public function it_has_platenumber()
+    public function it_knows_its_platenumber()
     {
         $this->hasPlatenumber('123 DE 456')->shouldBe(true);
+    }
+
+    public function it_knows_it_is_not_its_platenumber()
+    {
+        $this->hasPlatenumber('123 FR 456')->shouldBe(false);
     }
 
     public function it_knows_where_it_is_parked()
     {
         $this->park(Location::fromString('3.14,5.67'), new \DateTime);
         $this->isLocatedAt(Location::fromString('3.14,5.67'))->shouldBe(true);
+    }
+
+    public function it_knows_where_it_is_not_parked()
+    {
+        $this->park(Location::fromString('3.14,5.67'), new \DateTime);
+        $this->isLocatedAt(Location::fromString('3.14,4.12'))->shouldBe(false);
     }
 }
