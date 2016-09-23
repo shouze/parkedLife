@@ -19,9 +19,13 @@ class LocationSpec extends ObjectBehavior
         $this->getLongitude()->shouldBe('2.72');
     }
 
-    function it_is_comparable_with_other_location(Location $otherLocation)
+    function it_should_be_equal_to_same_location()
     {
-        $otherLocation = Location::fromString('3.14,2.72');
-        $this->isEqualTo($otherLocation)->shouldBe(true);
+        $this->isEqualTo(Location::fromString('3.14,2.72'))->shouldBe(true);
+    }
+
+    function it_should_not_be_equal_to_different_location()
+    {
+        $this->isEqualTo(Location::fromString('3.14,1.82'))->shouldBe(false);
     }
 }
