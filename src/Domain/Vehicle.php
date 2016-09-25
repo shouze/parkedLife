@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Shouze\ParkedLife\Domain;
 
-class Vehicle
+final class Vehicle
 {
     private $platenumber;
 

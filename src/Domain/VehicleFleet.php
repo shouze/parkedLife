@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace Shouze\ParkedLife\Domain;
 
-class VehicleFleet
-{
-    private $userId;
+use Shouze\ParkedLife\EventSourcing\AggregateRoot;
+use Shouze\ParkedLife\EventSourcing\Change;
 
+final class VehicleFleet extends AggregateRoot
+{
     private $vehicles = [];
 
     public function __construct(UserId $userId)
     {
-        $this->userId = $userId;
+        parent::__construct((string)$userId);
     }
 
     public static function ofUser(UserId $userId): VehicleFleet
@@ -21,30 +22,23 @@ class VehicleFleet
 
     public function registerVehicle(string $platenumber, string $description)
     {
-        $changes = [
-            new VehicleWasRegistered($platenumber, (string)$this->userId),
-            new VehicleWasDescribed($platenumber, $description)
-        ];
-
-        foreach ($changes as $change) {
-            $handler = sprintf('when%s', implode('', array_slice(explode('\\', get_class($change)), -1)));
-            $this->{$handler}($change);
-        }
+        $this->record(new VehicleWasRegistered($this->getAggregateId(), $platenumber));
+        $this->record(new VehicleWasDescribed($this->getAggregateId(), $platenumber, $description));
 
         return $this->vehicleWithPlatenumber($platenumber);
     }
 
-    public function whenVehicleWasRegistered($change)
+    public function whenVehicleWasRegistered(VehicleWasRegistered $change)
     {
-        $this->vehicles[] = Vehicle::register($change->getPlatenumber(), new UserId($change->getUserId()));
+        $this->vehicles[] = Vehicle::register($change->getPlatenumber(), new UserId($change->getAggregateId()));
     }
 
     public function describeVehicle(string $platenumber, string $description)
     {
-        $this->whenVehicleWasDescribed(new VehicleWasDescribed($platenumber, $description));
+        $this->record(new VehicleWasDescribed($this->getAggregateId(), $platenumber, $description));
     }
 
-    public function whenVehicleWasDescribed($change)
+    public function whenVehicleWasDescribed(VehicleWasDescribed $change)
     {
         $vehicle = $this->vehicleWithPlatenumber($change->getPlatenumber());
         $vehicle->describe($change->getDescription());
@@ -93,7 +87,7 @@ class VehicleFleet
         );
 
         if (null === $vehicle) {
-            throw new \LogicException(sprintf('Vehicle with plate number %s is unknown in fleet #%s', $platenumber, $this->userId));
+            throw new \LogicException(sprintf('Vehicle with plate number %s is unknown in fleet #%s', $platenumber, $this->getAggregateId()));
         }
 
         return $vehicle;

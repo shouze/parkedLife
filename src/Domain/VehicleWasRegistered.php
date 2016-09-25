@@ -3,25 +3,27 @@ declare(strict_types=1);
 
 namespace Shouze\ParkedLife\Domain;
 
-final class VehicleWasRegistered
-{
-    private $platenumber;
+use Shouze\ParkedLife\EventSourcing\Change;
 
+final class VehicleWasRegistered implements Change
+{
     private $userId;
 
-    public function __construct(string $platenumber, string $userId)
+    private $platenumber;
+
+    public function __construct(string $userId, string $platenumber)
     {
-        $this->platenumber = $platenumber;
         $this->userId = $userId;
+        $this->platenumber = $platenumber;
+    }
+
+    public function getAggregateId(): string
+    {
+        return $this->userId;
     }
 
     public function getPlatenumber(): string
     {
         return $this->platenumber;
-    }
-
-    public function getUserId(): string
-    {
-        return $this->userId;
     }
 }
