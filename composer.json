@@ -5,7 +5,9 @@
     "autoload": {
         "psr-4": { "Shouze\\ParkedLife\\": "src/" }
     },
-    "require": {},
+    "require": {
+        "symfony/serializer": "^3.1"
+    },
     "require-dev": {
         "behat/behat": "^3.2",
         "phpspec/phpspec": "^3.1",

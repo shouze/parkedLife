@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Shouze\ParkedLife\EventSourcing;
 
@@ -36,7 +37,7 @@ abstract class AggregateRoot
 
         $this->recordedChanges = [];
 
-        return $pendingChanges;
+        return new \ArrayIterator($pendingChanges);
     }
 
     protected function record(Change $change)

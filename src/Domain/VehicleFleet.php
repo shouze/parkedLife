@@ -46,12 +46,19 @@ final class VehicleFleet extends AggregateRoot
 
     public function parkVehicle(string $platenumber, Location $where, \DateTimeInterface $when)
     {
+        $this->record(new VehicleWasParked($this->getAggregateId(), $platenumber, $where->getLatitude(), $where->getLongitude(), $when->getTimestamp()));
+    }
+
+    public function whenVehicleWasParked(VehicleWasParked $change)
+    {
         try {
-            $vehicle = $this->vehicleWithPlatenumber($platenumber);
+            $vehicle = $this->vehicleWithPlatenumber($change->getPlatenumber());
         } catch (\LogicException $e) {
-            throw new \LogicException(sprintf('Cannot park unknown vehicle %s', $platenumber, 0, $e));
+            throw new \LogicException(sprintf('Cannot park unknown vehicle %s', $change->getPlatenumber(), 0, $e));
         }
 
+        $where = new Location($change->getLatitude(), $change->getLongitude());
+        $when = new \DateTimeImmutable(sprintf('@%ld', $change->getTimestamp()));
         $vehicle->park($where, $when);
     }
 

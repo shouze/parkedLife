@@ -8,3 +8,5 @@ vendor/bin/behat --append-snippets --snippets-for=FeatureContext
 composer require --dev phpspec/phpspec
 # Create phpspec.yml with psr4_prefix
 vendor/bin/phpspec run
+# Add a decent serializer
+composer require "symfony/serializer"

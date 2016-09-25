@@ -5,5 +5,5 @@ namespace Shouze\ParkedLife\EventSourcing;
 
 interface Change
 {
-    public function getAggregateId();
+    public function getAggregateId(): string;
 }
