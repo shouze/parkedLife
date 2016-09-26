@@ -6,5 +6,5 @@ interface Projector
 {
     public function saveProjection(Projection $projection);
 
-    public function readProjection($className, $aggregateId);
+    public function readProjection(string $className, string $aggregateId);
 }

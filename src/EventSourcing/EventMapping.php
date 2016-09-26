@@ -5,11 +5,16 @@ namespace Shouze\ParkedLife\EventSourcing;
 
 abstract class EventMapping
 {
-    protected static $mapping = [];
+    protected $mapping = [];
 
-    public function getEventNameFor(Change $change): string
+    public function getEventNameFor(Change $event): string
     {
-        return $this->valueOfKeyIfExist(get_class($change), array_flip(self::$mapping));
+        return $this->valueOfKeyIfExist(get_class($event), array_flip($this->mapping));
+    }
+
+    public function getEventClassNameFor(string $eventName): string
+    {
+        return $this->valueOfKeyIfExist($eventName, $this->mapping);
     }
 
     private function valueOfKeyIfExist($key, array $array): string

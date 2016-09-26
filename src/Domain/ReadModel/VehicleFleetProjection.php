@@ -8,14 +8,28 @@ class VehicleFleetProjection implements Projection, \JsonSerializable
 
     private $aggregateId;
 
-    public function __construct($aggregateId)
+    public function __construct(string $aggregateId)
     {
         $this->aggregateId = $aggregateId;
     }
 
-    public function addVehicle($vehicle)
+    public function addVehicle(string $vehicle)
     {
-        $this->vehicles[] = $vehicle;
+        $this->vehicles[] = ['platenumber' => $vehicle];
+    }
+
+    public function locateVehicle(string $platenumber, array $location)
+    {
+        $this->vehicles = array_map(
+            function ($vehicle) use ($platenumber, $location) {
+                if ($vehicle['platenumber'] == $platenumber) {
+                    $vehicle['location'] = $location;
+                }
+
+                return $vehicle;
+            },
+            $this->vehicles
+        );
     }
 
     public function jsonSerialize()

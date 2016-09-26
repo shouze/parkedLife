@@ -8,6 +8,11 @@
         <service id="vehicle_service.app.parked_life" class="Shouze\ParkedLife\App\VehicleService">
             <argument type="service" id="event_store_vehicle_fleet_repository.adapters.parked_life" />
             <tag name="tactician.handler" command="Shouze\ParkedLife\App\Command\RegisterVehicle" />
+            <tag name="tactician.handler" command="Shouze\ParkedLife\App\Command\ParkVehicle" />
+        </service>
+
+        <service id="vehicle_query_service.app.parked_life" class="Shouze\ParkedLife\App\VehicleQueryService">
+            <argument type="service" id="projector.adapters.parked_life" />
         </service>
 
         <service id="command_inflector.parked_life" class="Shouze\ParkedLife\Ports\CommandClassAsMethodInflector" public="false" />

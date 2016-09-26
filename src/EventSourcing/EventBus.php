@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Shouze\ParkedLife\EventSourcing;
 
-interface Change
+interface EventBus
 {
-    public function getAggregateId(): string;
+    public function publish(Change $change);
 }

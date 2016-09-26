@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Shouze\ParkedLife\Domain;
 
 use Shouze\ParkedLife\EventSourcing\Change;
-use Shouze\ParkedLife\EventSourcing\IdentifiesAggregate;
 
 final class VehicleWasRegistered implements Change
 {
@@ -12,13 +11,13 @@ final class VehicleWasRegistered implements Change
 
     private $platenumber;
 
-    public function __construct(UserId $userId, string $platenumber)
+    public function __construct(string $userId, string $platenumber)
     {
         $this->userId = $userId;
         $this->platenumber = $platenumber;
     }
 
-    public function getAggregateId(): IdentifiesAggregate
+    public function getAggregateId(): string
     {
         return $this->userId;
     }

@@ -15,13 +15,13 @@ final class Vehicle
 
     private $parkedAt;
 
-    public function __construct(string $platenumber, UserId $userId)
+    public function __construct(string $platenumber, $userId)
     {
         $this->platenumber = $platenumber;
         $this->userId = $userId;
     }
 
-    public static function register(string $platenumber, UserId $userId): Vehicle
+    public static function register(string $platenumber, $userId): Vehicle
     {
         return new static($platenumber, $userId);
     }

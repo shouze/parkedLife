@@ -7,6 +7,7 @@
     <services>
         <service id="vehicle_controller.ui.parked_life" class="Shouze\ParkedLife\Ui\Controller\VehicleController">
             <argument type="service" id="tactician.commandbus" />
+            <argument type="service" id="vehicle_query_service.app.parked_life" />
         </service>
 
         <service id="json_body_listener.ui" class="Rezzza\SymfonyRestApiJson\JsonBodyListener">

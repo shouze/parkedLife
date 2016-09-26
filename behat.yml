@@ -7,7 +7,8 @@ default:
         web:
             filters:  { tags: "critical,ui" }
             contexts:
-                - WebContext
+                - WebContext:
+                    eventStore: "@event_store.adapters.parked_life"
                 - Rezzza\RestApiBehatExtension\RestApiContext
                 - Rezzza\RestApiBehatExtension\Json\JsonContext
 
@@ -16,3 +17,4 @@ default:
             rest:
                 base_url: http://localhost:8000/
                 store_response: true
+        Behat\Symfony2Extension: ~

@@ -5,6 +5,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 
 class AppKernel extends Kernel
 {
@@ -33,6 +34,13 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__.'/services/');
         $loader->load(__DIR__.'/config/config.yml');
+        $c->addCompilerPass(
+            new RegisterListenersPass(
+                'event_dispatcher.parked_life',
+                'event_listener.parked_life',
+                'event_subscriber.parked_life'
+            )
+        );
     }
 
     public function getRootDir()

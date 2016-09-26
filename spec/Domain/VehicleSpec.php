@@ -4,7 +4,6 @@ namespace spec\Shouze\ParkedLife\Domain;
 
 use Shouze\ParkedLife\Domain\Location;
 use Shouze\ParkedLife\Domain\Vehicle;
-use Shouze\ParkedLife\Domain\UserId;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -12,7 +11,7 @@ class VehicleSpec extends ObjectBehavior
 {
     public function let()
     {
-        $this->beConstructedThrough('register', ['123 DE 456', new UserId('user'), 'Some car description']);
+        $this->beConstructedThrough('register', ['123 DE 456', 'user', 'Some car description']);
     }
 
     public function it_knows_its_platenumber()

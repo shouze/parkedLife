@@ -1,5 +1,6 @@
 parameters:
-    exception_http_code_map: []
+    exception_http_code_map:
+      Shouze\ParkedLife\App\Exception\NotFoundResource: 404
     show_exception_token: t0kt0k
 
 framework:

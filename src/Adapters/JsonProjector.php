@@ -25,13 +25,19 @@ class JsonProjector implements Projector
             get_class($projection),
             $projection->getAggregateId()
         );
+        $dir = dirname($path);
+
+        if (false === is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
         file_put_contents(
             $path,
             $this->serializer->serialize($projection, 'json')
         );
     }
 
-    public function readProjection($className, $aggregateId)
+    public function readProjection(string $className, string $aggregateId)
     {
         $path = $this->buildPath($className, $aggregateId);
 
@@ -47,7 +53,7 @@ class JsonProjector implements Projector
         $hash = sha1($className.$aggregateId);
         return
             $this->rootDir.'/'.
-            $className.'/'.
+            'projections/'.
             substr($hash, 0, 2).'/'.
             substr($hash, 2, 2).'/'.
             $hash

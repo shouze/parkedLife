@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Shouze\ParkedLife\Domain;
 
-class Location
+class Location implements \JsonSerializable
 {
     private $latitude;
 
@@ -38,5 +38,13 @@ class Location
     public function getLongitude(): float
     {
         return $this->longitude;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+        ];
     }
 }

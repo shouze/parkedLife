@@ -29,7 +29,7 @@ class DomainContext implements Context
      */
     public function __construct()
     {
-        $this->userId = Domain\UserId::fromString(ShortUuid::uuid4());
+        $this->userId = ShortUuid::uuid4();
         $this->asserter = new asserter\generator;
     }
 
@@ -91,7 +91,7 @@ class DomainContext implements Context
     private function reconstituteVehicleFleetFromHistory()
     {
         if (count($this->pastChanges) <= 0) {
-            return Domain\VehicleFleet::ofUser(new Domain\UserId($this->userId));
+            return Domain\VehicleFleet::ofUser($this->userId);
         }
 
         return Domain\VehicleFleet::reconstituteFromHistory(EventSourcing\AggregateHistory::fromEvents($this->pastChanges));

@@ -3,6 +3,7 @@
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use PascalDeVink\ShortUuid\ShortUuid;
 use Rezzza\RestApiBehatExtension\Rest\RestApiBrowser;
@@ -20,29 +21,33 @@ class WebContext implements Context
 
     private $restApiBrowser;
 
-    public function __construct(RestApiBrowser $restApiBrowser)
+    private $jsonContext;
+
+    public function __construct(EventSourcing\EventStore $eventStore, RestApiBrowser $restApiBrowser)
     {
-        $serializer = new EventSourcing\EventSerializer(
-            new Domain\EventMapping,
-            new Symfony\Component\Serializer\Serializer(
-                [
-                    new Symfony\Component\Serializer\Normalizer\PropertyNormalizer(
-                        null,
-                        new Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
-                    )
-                ],
-                [ new Symfony\Component\Serializer\Encoder\JsonEncoder ]
-            )
-        );
-        $this->eventStore = new Adapters\FilesystemEventStore(
-            __DIR__.'/../../var/eventstore',
-            $serializer,
-            new Ports\FileHelper
-        );
+        $this->eventStore = $eventStore;
         $this->restApiBrowser = $restApiBrowser;
         $this->restApiBrowser->setRequestHeader('Content-Type', 'application/json');
         $this->restApiBrowser->setRequestHeader('X-Show-Exception-Token', 't0kt0k');
         $this->userId = ShortUuid::uuid4();
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function gatherContexts(BeforeScenarioScope $scope)
+    {
+        $environment = $scope->getEnvironment();
+
+        $this->jsonContext = $environment->getContext('Rezzza\RestApiBehatExtension\Json\JsonContext');
+    }
+
+    /**
+     * @Transform :location
+     */
+    public function castLocation($location)
+    {
+        return Domain\Location::fromString($location);
     }
 
     /**
@@ -51,10 +56,10 @@ class WebContext implements Context
     public function iRegistredMyVehicleWithPlatenumber($platenumber)
     {
         $this->eventStore->commit(
-            new EventSourcing\EventStream(
-                new EventSourcing\EventStreamId('vehicle-fleet_'.$this->userId),
+            new EventSourcing\Stream(
+                new EventSourcing\StreamName('vehicle_fleet-'.$this->userId),
                 new \ArrayIterator([
-                    new Domain\VehicleWasRegistered($platenumber, $this->userId)
+                    new Domain\VehicleWasRegistered($this->userId, $platenumber)
                 ])
             )
         );
@@ -63,9 +68,17 @@ class WebContext implements Context
     /**
      * @When I park my vehicle with platenumber :platenumber at location :location
      */
-    public function iParkMyVehicleWithPlatenumberAtLocation($platenumber, $location)
+    public function iParkMyVehicleWithPlatenumberAtLocation($platenumber, Domain\Location $location)
     {
-        throw new PendingException();
+        // Endpoint should be improve to follow REST
+        $this->restApiBrowser->sendRequest(
+            'POST',
+            sprintf('/users/%s/vehicles/location', $this->userId),
+            json_encode([
+                'platenumber' => $platenumber,
+                'location' => $location,
+            ])
+        );
     }
 
     /**
@@ -84,18 +97,28 @@ class WebContext implements Context
     }
 
     /**
-     * @Then the vehicle with platenumber :arg1 should be part of my vehicle fleet
+     * @Then the vehicle with platenumber :platenumber should be part of my vehicle fleet
      */
-    public function theVehicleWithPlatenumberShouldBePartOfMyVehicleFleet($arg1)
+    public function theVehicleWithPlatenumberShouldBePartOfMyVehicleFleet($platenumber)
     {
-        throw new PendingException();
+        $this->restApiBrowser->sendRequest(
+            'GET',
+            sprintf('/users/%s/vehicles', $this->userId)
+        );
+        // Shoud iterate to be a better assertion
+        $this->jsonContext->theJsonNodeShouldBeEqualTo('vehicles[0].platenumber', $platenumber);
     }
 
     /**
-     * @Then the known location of my vehicle :arg1 should be :arg2
+     * @Then the known location of my vehicle :platenumber should be :location
      */
-    public function theKnownLocationOfMyVehicleShouldBe($arg1, $arg2)
+    public function theKnownLocationOfMyVehicleShouldBe($platenumber, Domain\Location $location)
     {
-        throw new PendingException();
+        $this->restApiBrowser->sendRequest(
+            'GET',
+            sprintf('/users/%s/vehicles', $this->userId)
+        );
+        $this->jsonContext->theJsonNodeShouldBeEqualTo('vehicles[0].location.latitude', $location->getLatitude());
+        $this->jsonContext->theJsonNodeShouldBeEqualTo('vehicles[0].location.longitude', $location->getLongitude());
     }
 }

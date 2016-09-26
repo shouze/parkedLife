@@ -13,7 +13,7 @@ class VehicleFleetSpec extends ObjectBehavior
 {
     public function let()
     {
-        $this->beConstructedWith(new UserId('123'));
+        $this->beConstructedThrough('ofUser', ['123']);
     }
 
     public function it_register_new_vehicle()

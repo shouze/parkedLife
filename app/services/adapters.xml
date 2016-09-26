@@ -5,23 +5,28 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="projector.adapters.parked_life" class="Shouze\ParkedLife\Adapters\JsonProjector">
+            <argument>%kernel.root_dir%/../var/eventstore</argument>
+            <argument type="service" id="serializer.parked_life" />
+        </service>
         <service id="event_store_vehicle_fleet_repository.adapters.parked_life" class="Shouze\ParkedLife\Adapters\EventStoreVehicleFleetRepository">
             <argument type="service" id="event_store.adapters.parked_life" />
         </service>
         <service id="event_store.adapters.parked_life" class="Shouze\ParkedLife\Adapters\FilesystemEventStore">
             <argument>%kernel.root_dir%/../var/eventstore</argument>
-            <argument type="service">
-                <service class="Shouze\ParkedLife\EventSourcing\EventSerializer">
-                    <argument type="service">
-                        <service class="Shouze\ParkedLife\Domain\EventMapping" />
-                    </argument>
-                    <argument type="service" id="serializer.parked_life" />
-                </service>
-            </argument>
+            <argument type="service" id="event_serializer.parked_life" />
             <argument type="service">
                 <service class="Shouze\ParkedLife\Ports\FileHelper" />
             </argument>
+            <argument type="service" id="symfony_event_bus.parked_life" />
          </service>
+
+         <service id="event_serializer.parked_life" class="Shouze\ParkedLife\EventSourcing\EventSerializer" public="false">
+            <argument type="service">
+                <service class="Shouze\ParkedLife\Domain\EventMapping" />
+            </argument>
+            <argument type="service" id="serializer.parked_life" />
+        </service>
 
          <service id="serializer.parked_life" class="Symfony\Component\Serializer\Serializer" public="false">
             <argument type="collection">
@@ -39,6 +44,15 @@
                     <service class="Symfony\Component\Serializer\Encoder\JsonEncoder" />
                 </argument>
             </argument>
+        </service>
+
+        <service id="symfony_event_bus.parked_life" class="Shouze\ParkedLife\Adapters\SymfonyEventBus">
+            <argument type="service" id="event_dispatcher.parked_life" />
+            <argument type="service" id="event_serializer.parked_life" />
+        </service>
+
+        <service id="event_dispatcher.parked_life" class="Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher">
+            <argument type="service" id="service_container" />
         </service>
     </services>
 </container>

@@ -10,12 +10,7 @@ final class VehicleFleet extends AggregateRoot
 {
     private $vehicles = [];
 
-    public function __construct(UserId $userId)
-    {
-        parent::__construct($userId);
-    }
-
-    public static function ofUser(UserId $userId): VehicleFleet
+    public static function ofUser($userId): VehicleFleet
     {
         return new VehicleFleet($userId);
     }

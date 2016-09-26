@@ -9,13 +9,13 @@ abstract class AggregateRoot
 
     private $recordedChanges = [];
 
-    protected function __construct(IdentifiesAggregate $aggregateId)
+    protected function __construct(string $aggregateId)
     {
         // Use named constructor as it made event sourcing and ubiquitous language easier
         $this->aggregateId = $aggregateId;
     }
 
-    public function getAggregateId(): IdentifiesAggregate
+    public function getAggregateId(): string
     {
         return $this->aggregateId;
     }

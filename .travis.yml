@@ -7,5 +7,6 @@ before_script:
     - composer install --prefer-dist --optimize-autoloader
 
 script:
+    - bin/console server:run &> /dev/null &
     - vendor/bin/behat -f progress
     - vendor/bin/phpspec run --format=dot
