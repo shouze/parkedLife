@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="event_store_vehicle_fleet_repository.adapters.parked_life" class="Shouze\ParkedLife\Adapters\EventStoreVehicleFleetRepository">
+            <argument type="service" id="event_store.adapters.parked_life" />
+        </service>
+        <service id="event_store.adapters.parked_life" class="Shouze\ParkedLife\Adapters\FilesystemEventStore">
+            <argument>%kernel.root_dir%/../var/eventstore</argument>
+            <argument type="service">
+                <service class="Shouze\ParkedLife\EventSourcing\EventSerializer">
+                    <argument type="service">
+                        <service class="Shouze\ParkedLife\Domain\EventMapping" />
+                    </argument>
+                    <argument type="service" id="serializer.parked_life" />
+                </service>
+            </argument>
+            <argument type="service">
+                <service class="Shouze\ParkedLife\Ports\FileHelper" />
+            </argument>
+         </service>
+
+         <service id="serializer.parked_life" class="Symfony\Component\Serializer\Serializer" public="false">
+            <argument type="collection">
+                <argument type="service">
+                    <service class="Symfony\Component\Serializer\Normalizer\PropertyNormalizer">
+                        <argument>null</argument>
+                        <argument type="service">
+                            <service class="Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter" />
+                        </argument>
+                    </service>
+                </argument>
+            </argument>
+            <argument type="collection">
+                <argument type="service">
+                    <service class="Symfony\Component\Serializer\Encoder\JsonEncoder" />
+                </argument>
+            </argument>
+        </service>
+    </services>
+</container>

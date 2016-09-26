@@ -1,0 +1,9 @@
+parameters:
+    exception_http_code_map: []
+    show_exception_token: t0kt0k
+
+framework:
+    secret: S0ME_SECRET
+
+tactician:
+    method_inflector: command_inflector.parked_life

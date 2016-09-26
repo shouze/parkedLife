@@ -31,13 +31,13 @@ abstract class AggregateRoot
         return $aggregateRoot;
     }
 
-    public function popRecordedChanges(): AggregateHistory
+    public function popRecordedChanges(): \Iterator
     {
         $pendingChanges = $this->recordedChanges;
 
         $this->recordedChanges = [];
 
-        return AggregateHistory::fromEvents($pendingChanges);
+        return new \ArrayIterator($pendingChanges);
     }
 
     protected function record(Change $change)

@@ -14,5 +14,5 @@ default:
     extensions:
         Rezzza\RestApiBehatExtension\Extension:
             rest:
-                base_url: http://localhost:8888/
+                base_url: http://localhost:8000/
                 store_response: true

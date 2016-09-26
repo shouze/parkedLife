@@ -100,7 +100,7 @@ class DomainContext implements Context
     private function vehicleFleetShouldHaveRecordedChanges(array $changes)
     {
         if (null === $this->vehicleFleetHistory) {
-            $this->vehicleFleetHistory = $this->vehicleFleet->popRecordedChanges()->toArray();
+            $this->vehicleFleetHistory = $this->vehicleFleet->popRecordedChanges()->getArrayCopy();
         }
         $this->asserter
             ->phpArray($this->vehicleFleetHistory)

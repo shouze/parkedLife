@@ -1,0 +1,5 @@
+register_vehicle:
+    path: /users/{userId}/vehicles
+    defaults:
+        _controller: vehicle_controller.ui.parked_life:registerVehicle
+    methods: [POST]
