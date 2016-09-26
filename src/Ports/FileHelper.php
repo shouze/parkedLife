@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Shouze\ParkedLife\Ports;
 
+use SplFileObject;
+
 class FileHelper
 {
     public function readIterator(string $filename): \Iterator

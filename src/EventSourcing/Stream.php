@@ -6,7 +6,9 @@ namespace Shouze\ParkedLife\EventSourcing;
 class Stream
 {
     private $streamName;
+
     private $changes;
+
     public function __construct(StreamName $streamName, \Iterator $changes)
     {
         $this->streamName = $streamName;

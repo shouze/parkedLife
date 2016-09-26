@@ -20,7 +20,7 @@ abstract class AggregateRoot
         return $this->aggregateId;
     }
 
-    public static function reconstituteFromHistory(\Iterator $history)
+    public static function reconstituteFromHistory(AggregateHistory $history)
     {
         $aggregateRoot = new static($history->getAggregateId());
 

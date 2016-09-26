@@ -1,0 +1,20 @@
+default:
+    suites:
+        domain:
+            filters:  { tags: "~ui" }
+            contexts:
+                - DomainContext
+        web:
+            filters:  { tags: "critical,ui" }
+            contexts:
+                - WebContext:
+                    eventStore: "@event_store.adapters.parked_life"
+                - Rezzza\RestApiBehatExtension\RestApiContext
+                - Rezzza\RestApiBehatExtension\Json\JsonContext
+
+    extensions:
+        Rezzza\RestApiBehatExtension\Extension:
+            rest:
+                base_url: http://localhost:8000/
+                store_response: true
+        Behat\Symfony2Extension: ~

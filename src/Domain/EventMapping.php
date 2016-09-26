@@ -9,7 +9,7 @@ final class EventMapping extends AbstractEventMapping
 {
     public function __construct()
     {
-        self::$mapping = [
+        $this->mapping = [
             'vehicle_was_registered.fleet.parkedlife' => VehicleWasRegistered::class,
             'vehicle_was_described.fleet.parkedlife' => VehicleWasDescribed::class,
             'vehicle_was_parked.fleet.parkedlife' => VehicleWasParked::class,

@@ -1,0 +1,17 @@
+register_vehicle:
+    path: /users/{userId}/vehicles
+    defaults:
+        _controller: vehicle_controller.ui.parked_life:registerVehicle
+    methods: [POST]
+
+park_vehicle:
+    path: /users/{userId}/vehicles/location
+    defaults:
+        _controller: vehicle_controller.ui.parked_life:parkVehicle
+    methods: [POST]
+
+list_vehicles:
+    path: /users/{userId}/vehicles
+    defaults:
+        _controller: vehicle_controller.ui.parked_life:listVehicles
+    methods: [GET]
