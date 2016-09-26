@@ -3,17 +3,33 @@ declare(strict_types=1);
 
 namespace Shouze\ParkedLife\Domain;
 
-class UserId
-{
-    private $value;
+use Shouze\ParkedLife\EventSourcing\IdentifiesAggregate;
 
-    public function __construct(string $value)
+class UserId implements IdentifiesAggregate
+{
+    private $userId;
+
+    public function __construct(string $userId)
     {
-        $this->value = $value;
+        $this->userId = $userId;
+    }
+
+    public static function fromString(string $string)
+    {
+        return new UserId($string);
     }
 
     public function __toString(): string
     {
-        return $this->value;
+        return $this->userId;
     }
+
+    public function equals(IdentifiesAggregate $other): bool
+    {
+        return
+            $other instanceof UserId
+            && $this->userId == $other->userId
+        ;
+    }
+
 }

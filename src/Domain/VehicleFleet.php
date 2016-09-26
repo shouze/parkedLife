@@ -12,7 +12,7 @@ final class VehicleFleet extends AggregateRoot
 
     public function __construct(UserId $userId)
     {
-        parent::__construct((string)$userId);
+        parent::__construct($userId);
     }
 
     public static function ofUser(UserId $userId): VehicleFleet
@@ -30,7 +30,7 @@ final class VehicleFleet extends AggregateRoot
 
     public function whenVehicleWasRegistered(VehicleWasRegistered $change)
     {
-        $this->vehicles[] = Vehicle::register($change->getPlatenumber(), new UserId($change->getAggregateId()));
+        $this->vehicles[] = Vehicle::register($change->getPlatenumber(), $change->getAggregateId());
     }
 
     public function describeVehicle(string $platenumber, string $description)

@@ -9,18 +9,18 @@ abstract class AggregateRoot
 
     private $recordedChanges = [];
 
-    protected function __construct(string $aggregateId)
+    protected function __construct(IdentifiesAggregate $aggregateId)
     {
         // Use named constructor as it made event sourcing and ubiquitous language easier
         $this->aggregateId = $aggregateId;
     }
 
-    public function getAggregateId(): string
+    public function getAggregateId(): IdentifiesAggregate
     {
         return $this->aggregateId;
     }
 
-    public static function reconstituteFromHistory(\Iterator $history)
+    public static function reconstituteFromHistory(AggregateHistory $history)
     {
         $aggregateRoot = new static($history->getAggregateId());
 
@@ -31,13 +31,13 @@ abstract class AggregateRoot
         return $aggregateRoot;
     }
 
-    public function popRecordedChanges(): \Iterator
+    public function popRecordedChanges(): AggregateHistory
     {
         $pendingChanges = $this->recordedChanges;
 
         $this->recordedChanges = [];
 
-        return new \ArrayIterator($pendingChanges);
+        return AggregateHistory::fromEvents($pendingChanges);
     }
 
     protected function record(Change $change)
